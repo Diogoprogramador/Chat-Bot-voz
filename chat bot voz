@@ -1,0 +1,56 @@
+import pyttsx3
+import speech_recognition as sr
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
+from kivy.uix.button import Button
+
+# Dicionário de perguntas e respostas
+perguntas_respostas = {
+    "Qual é a capital do Brasil?": "A capital do Brasil é Brasília.",
+    "Quem  criou você?": "Foi um desenvolverdor chamado  Diogo.",
+    "Quem descobriu o Brasil?": "O Brasil foi descoberto por Pedro Álvares Cabral.",
+    "Qual é a fórmula da água?": "A fórmula da água é H2O.",
+    "Quantos planetas existem no sistema solar?": "Existem oito planetas no sistema solar.",
+    "Quem escreveu 'Dom Quixote'?": "Dom Quixote foi escrito por Miguel de Cervantes."
+}
+
+class ChatBotApp(App):
+    def build(self):
+        self.title = 'ChatBot Inteligente'
+
+        self.layout = BoxLayout(orientation='vertical', padding=10)
+
+        self.label = Label(text="Digite sua pergunta:")
+        self.layout.add_widget(self.label)
+
+        self.text_input = TextInput(multiline=False)
+        self.layout.add_widget(self.text_input)
+
+        self.button = Button(text="Perguntar")
+        self.button.bind(on_press=self.ask_question)
+        self.layout.add_widget(self.button)
+
+        self.answer_label = Label(text="")
+        self.layout.add_widget(self.answer_label)
+
+        return self.layout
+
+    def ask_question(self, instance):
+        question = self.text_input.text
+        if question in perguntas_respostas:
+            answer = perguntas_respostas[question]
+            self.answer_label.text = answer
+            self.speak(answer)
+        else:
+            self.answer_label.text = "Desculpe, não sei a resposta para essa pergunta."
+            self.speak("Desculpe, não sei a resposta para essa pergunta.")
+
+    def speak(self, text):
+        engine = pyttsx3.init()
+        engine.say(text)
+        engine.runAndWait()
+
+if __name__ == '__main__':
+    ChatBotApp().run()
